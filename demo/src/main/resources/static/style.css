@@ -1,0 +1,95 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+/* Start Page */
+.start-page {
+    margin-top: 50px;
+}
+
+.birthday-cake {
+    width: 200px;
+    height: auto;
+}
+
+.message {
+    margin-top: 20px;
+}
+
+.message h1 {
+    font-size: 30px;
+    color: #FF6347;
+}
+
+.message p {
+    font-size: 18px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #FF6347;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #FF4500;
+}
+
+/* Quiz Page */
+.quiz-page {
+    margin-top: 50px;
+}
+
+.question-container {
+    text-align: center;
+}
+
+.question-image {
+    width: 300px;
+    height: auto;
+}
+
+.options button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #FF6347;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.options button:hover {
+    background-color: #FF4500;
+}
+
+/* Clue Image */
+.clue-image {
+    width: 150px;
+    height: auto;
+}
+
+/* End Page */
+.end-page {
+    margin-top: 50px;
+}
+
+.end-page .message {
+    text-align: center;
+}
+
+.end-page .message h1 {
+    font-size: 36px;
+    color: #FF6347;
+}
+
+.end-page .message p {
+    font-size: 18px;
+    color: #333;
+}

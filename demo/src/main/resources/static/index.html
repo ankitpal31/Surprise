@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Game - Birthday Edition</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+            background-image: url('/images/background_image.jpg'); /* Background image for birthday */
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .quiz-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            width: 70%;
+            max-width: 500px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .options {
+            margin: 20px 0;
+        }
+
+        .options button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .options button:hover {
+            background-color: #45a049;
+        }
+
+        .clue-button {
+            background-color: #f1c40f;
+            color: white;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .clue-container {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .clue-container img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .clue-container p {
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .next-button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            margin-top: 20px;
+        }
+
+        .next-button:disabled {
+            background-color: #b0c4de;
+            cursor: not-allowed;
+        }
+
+        #start-message {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+
+        .start-message-container {
+            text-align: center;
+        }
+
+        .birthday-message {
+            font-size: 1.5rem;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="quiz-container">
+            <div id="start-message" class="start-message-container">
+                <p>Ready to start the Birthday Quiz?</p>
+                <button onclick="startQuiz()">Start Quiz</button>
+            </div>
+
+            <div id="quiz-container" style="display: none;">
+                <div class="question" id="question-text"></div>
+                <div class="options">
+                    <button onclick="checkAnswer('A')" id="optionA"></button>
+                    <button onclick="checkAnswer('B')" id="optionB"></button>
+                    <button onclick="checkAnswer('C')" id="optionC"></button>
+                    <button onclick="checkAnswer('D')" id="optionD"></button>
+                </div>
+                <button class="clue-button" onclick="getClue()">Clue</button>
+                <div class="clue-container" id="clue-container">
+                    <img id="clue-image" src="" alt="Clue Image">
+                    <p id="clue-shayari"></p>
+                </div>
+                <button id="next-button" class="next-button" onclick="nextQuestion()" disabled>Next</button>
+            </div>
+
+            <div id="end-message" class="birthday-message" style="display: none;">
+                <p>Happy Birthday!</p>
+                <p>May your day be filled with happiness and joy!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestionId = 1; // Track the current question ID
+        let correctAnswer = "";
+        let answeredCorrectly = false;
+
+        function startQuiz() {
+            document.getElementById('start-message').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            loadQuestion(currentQuestionId);
+        }
+
+        function loadQuestion(questionId) {
+            fetch(`/api/question/clue/${questionId}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Populate question and options
+                    document.getElementById('question-text').innerText = data.question.questionText;
+                    document.getElementById('optionA').innerText = data.question.optionA;
+                    document.getElementById('optionB').innerText = data.question.optionB;
+                    document.getElementById('optionC').innerText = data.question.optionC;
+                    document.getElementById('optionD').innerText = data.question.optionD;
+                    correctAnswer = data.correctAnswer;
+
+                    // Set background image for the question
+                    document.body.style.backgroundImage = `url('/images/question${questionId}.jpg')`; // Use image based on question ID
+                });
+        }
+
+        function checkAnswer(selectedOption) {
+            if (selectedOption === correctAnswer) {
+                answeredCorrectly = true;
+                document.getElementById('next-button').disabled = false; // Enable next button
+                alert("Correct Answer!");
+                nextQuestion();
+            } else {
+                answeredCorrectly = false;
+                alert("Wrong Answer. Try again.");
+            }
+        }
+
+        function getClue() {
+            fetch(`/api/question/clue/${currentQuestionId}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Show clue
+                    document.getElementById('clue-image').src = `/images/clue.jpg`; // Clue image from static folder
+                    document.getElementById('clue-shayari').innerText = data.clue.shayari;
+                    document.getElementById('clue-container').style.display = 'block';
+                });
+        }
+
+        function nextQuestion() {
+            currentQuestionId++; // Increment question ID for the next question
+            if (currentQuestionId <= 25) {
+                loadQuestion(currentQuestionId);
+                document.getElementById('next-button').disabled = true; // Disable the next button until answer is correct
+                document.getElementById('clue-container').style.display = 'none'; // Hide clue
+            } else {
+                document.getElementById('quiz-container').style.display = 'none';
+                document.getElementById('end-message').style.display = 'block'; // Show end message when quiz ends
+            }
+        }
+    </script>
+</body>
+</html>
