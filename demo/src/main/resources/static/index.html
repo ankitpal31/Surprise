@@ -197,7 +197,7 @@
 
         function nextQuestion() {
             currentQuestionId++; // Increment question ID for the next question
-            if (currentQuestionId <= 25) {
+            if (currentQuestionId <= 5) {
                 loadQuestion(currentQuestionId);
                 document.getElementById('next-button').disabled = true; // Disable the next button until answer is correct
                 document.getElementById('clue-container').style.display = 'none'; // Hide clue
